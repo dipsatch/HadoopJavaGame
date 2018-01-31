@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Vendor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JavaGame</a> &gt; <a href="index.source.html" class="el_package">com.redomar.game.entities</a> &gt; <span class="el_source">Vendor.java</span></div><h1>Vendor.java</h1><pre class="source lang-java linenums">package com.redomar.game.entities;
+
+import com.redomar.game.entities.efx.Swim;
+import com.redomar.game.gfx.Colours;
+import com.redomar.game.gfx.Screen;
+import com.redomar.game.level.LevelHandler;
+import com.redomar.game.level.Node;
+
+import java.util.List;
+
+public class Vendor extends Mob {
+
+<span class="fc" id="L13">	private static double speed = 0.75;</span>
+<span class="fc" id="L14">	private static int[] collisionBoders = {0, 7, 0, 7};</span>
+	private int colour, shirtCol, faceCol; // = Colours.get(-1, 111, 240, 310);
+<span class="fc" id="L16">	private int tickCount = 0;</span>
+<span class="fc" id="L17">	private int tick = 0;</span>
+<span class="fc" id="L18">	private double xa = 0;</span>
+<span class="fc" id="L19">	private double ya = 0;</span>
+	private double[] movement;
+	private boolean[] swimType;
+	private int[] swimColour;
+<span class="fc" id="L23">	private List&lt;Node&gt; path = null;</span>
+<span class="fc" id="L24">	private int time = 0;</span>
+	private Swim swim;
+
+	public Vendor(LevelHandler level, String name, int x, int y, int shirtCol,
+				  int faceCol) {
+<span class="fc" id="L29">		super(level, name, x, y, speed, collisionBoders);</span>
+<span class="fc" id="L30">		this.faceCol = faceCol;</span>
+<span class="fc" id="L31">		this.shirtCol = shirtCol;</span>
+<span class="fc" id="L32">		this.colour = Colours.get(-1, 111, shirtCol, faceCol);</span>
+<span class="fc" id="L33">	}</span>
+
+	public void tick() {
+
+<span class="nc" id="L37">		tick++;</span>
+<span class="nc" id="L38">		movement = randomMovementAI(x, y, xa, ya, tick);</span>
+
+<span class="nc" id="L40">		this.xa = movement[0];</span>
+<span class="nc" id="L41">		this.ya = movement[1];</span>
+
+<span class="nc" id="L43">		moveMob(xa, ya, this);</span>
+
+<span class="nc" id="L45">		setSwim(new Swim(level, (int) getX(), (int) getY()));</span>
+<span class="nc" id="L46">		swimType = swim.swimming(isSwimming, isMagma, isMuddy);</span>
+<span class="nc" id="L47">		isSwimming = swimType[0];</span>
+<span class="nc" id="L48">		isMagma = swimType[1];</span>
+<span class="nc" id="L49">		isMuddy = swimType[2];</span>
+
+<span class="nc" id="L51">		tickCount++;</span>
+
+<span class="nc" id="L53">	}</span>
+
+	public void render(Screen screen) {
+<span class="nc" id="L56">		setTime(time + 1);</span>
+<span class="nc" id="L57">		int xTile = 8;</span>
+<span class="nc" id="L58">		int yTile = 28;</span>
+<span class="nc" id="L59">		int walkingSpeed = 4;</span>
+<span class="nc" id="L60">		int flipTop = (numSteps &gt;&gt; walkingSpeed) &amp; 1;</span>
+<span class="nc" id="L61">		int flipBottom = (numSteps &gt;&gt; walkingSpeed) &amp; 1;</span>
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">		if (movingDir == 1) {</span>
+<span class="nc" id="L64">			xTile += 2;</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">			if (!isMoving || swim.isActive(swimType)){</span>
+<span class="nc" id="L66">				yTile -= 2;</span>
+			}
+<span class="nc bnc" id="L68" title="All 8 branches missed.">		} else if (movingDir == 0 &amp;&amp; !isMoving || movingDir == 0 &amp;&amp; swim.isActive(swimType)) {</span>
+<span class="nc" id="L69">			yTile -= 2;</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">		} else if (movingDir &gt; 1) {</span>
+<span class="nc" id="L71">			xTile += 4 + ((numSteps &gt;&gt; walkingSpeed) &amp; 1) * 2;</span>
+<span class="nc" id="L72">			flipTop = (movingDir - 1) % 2;</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">			if(!isMoving){</span>
+<span class="nc" id="L74">				xTile = 4;</span>
+			}
+		}
+
+<span class="nc" id="L78">		int modifier = 8 * scale;</span>
+<span class="nc" id="L79">		int xOffset = (int) getX() - modifier / 2;</span>
+<span class="nc" id="L80">		int yOffset = (int) getY() - modifier / 2 - 4;</span>
+
+<span class="nc bnc" id="L82" title="All 6 branches missed.">		if (isSwimming || isMagma || isMuddy) {</span>
+<span class="nc" id="L83">			swimColour = swim.waveCols(isSwimming, isMagma, isMuddy);</span>
+
+<span class="nc" id="L85">			int waterColour = 0;</span>
+<span class="nc" id="L86">			yOffset += 4;</span>
+
+<span class="nc" id="L88">			colour = Colours.get(-1, 111, -1, faceCol);</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">			if (tickCount % 60 &lt; 15) {</span>
+<span class="nc" id="L91">				waterColour = Colours.get(-1, -1, swimColour[0], -1);</span>
+<span class="nc bnc" id="L92" title="All 4 branches missed.">			} else if (15 &lt;= tickCount % 60 &amp;&amp; tickCount % 60 &lt; 30) {</span>
+<span class="nc" id="L93">				yOffset--;</span>
+<span class="nc" id="L94">				waterColour = Colours.get(-1, swimColour[1], swimColour[2], -1);</span>
+<span class="nc bnc" id="L95" title="All 4 branches missed.">			} else if (30 &lt;= tickCount % 60 &amp;&amp; tickCount % 60 &lt; 45) {</span>
+<span class="nc" id="L96">				waterColour = Colours.get(-1, swimColour[2], -1, swimColour[1]);</span>
+			} else {
+<span class="nc" id="L98">				yOffset--;</span>
+<span class="nc" id="L99">				waterColour = Colours.get(-1, -1, swimColour[1], swimColour[2]);</span>
+			}
+
+<span class="nc" id="L102">			screen.render(xOffset, yOffset + 3, 31 + 31 * 32, waterColour,</span>
+					0x00, 1);
+<span class="nc" id="L104">			screen.render(xOffset + 8, yOffset + 3, 31 + 31 * 32, waterColour,</span>
+					0x01, 1);
+		}
+
+<span class="nc" id="L108">		screen.render((xOffset + (modifier * flipTop)), yOffset,</span>
+				(xTile + yTile * 32), colour, flipTop, scale);
+<span class="nc" id="L110">		screen.render((xOffset + modifier - (modifier * flipTop)), yOffset,</span>
+				((xTile + 1) + yTile * 32), colour, flipTop, scale);
+<span class="nc bnc" id="L112" title="All 6 branches missed.">		if (!isSwimming &amp;&amp; !isMagma &amp;&amp; !isMuddy) {</span>
+<span class="nc" id="L113">			screen.render((xOffset + (modifier * flipBottom)),</span>
+					(yOffset + modifier), (xTile + (yTile + 1) * 32), colour,
+					flipBottom, scale);
+<span class="nc" id="L116">			screen.render((xOffset + modifier - (modifier * flipBottom)),</span>
+					(yOffset + modifier), ((xTile + 1) + (yTile + 1) * 32),
+					colour, flipBottom, scale);
+<span class="nc" id="L119">			colour = Colours.get(-1, 111, shirtCol, faceCol);</span>
+		}
+<span class="nc" id="L121">	}</span>
+
+	public Swim getSwim() {
+<span class="fc" id="L124">		return swim;</span>
+	}
+
+	public void setSwim(Swim swim) {
+<span class="fc" id="L128">		this.swim = swim;</span>
+<span class="fc" id="L129">	}</span>
+
+	public List&lt;Node&gt; getPath() {
+<span class="nc" id="L132">		return path;</span>
+	}
+
+	public void setPath(List&lt;Node&gt; path) {
+<span class="nc" id="L136">		this.path = path;</span>
+<span class="nc" id="L137">	}</span>
+
+	public int getTime() {
+<span class="nc" id="L140">		return time;</span>
+	}
+
+	public void setTime(int time) {
+<span class="nc" id="L144">		this.time = time;</span>
+<span class="nc" id="L145">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

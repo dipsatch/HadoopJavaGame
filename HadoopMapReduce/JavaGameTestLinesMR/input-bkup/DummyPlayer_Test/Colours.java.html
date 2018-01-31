@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Colours.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JavaGame</a> &gt; <a href="index.source.html" class="el_package">com.redomar.game.gfx</a> &gt; <span class="el_source">Colours.java</span></div><h1>Colours.java</h1><pre class="source lang-java linenums">package com.redomar.game.gfx;
+
+<span class="nc" id="L3">public class Colours {</span>
+
+	public static int get(int colour1, int colour2, int colour3, int colour4) {
+<span class="fc" id="L6">		return (get(colour4) &lt;&lt; 24) + (get(colour3) &lt;&lt; 16)</span>
+<span class="fc" id="L7">				+ (get(colour2) &lt;&lt; 8) + (get(colour1));</span>
+	}
+
+	private static int get(int colour) {
+
+<span class="fc bfc" id="L12" title="All 2 branches covered.">		if (colour &lt; 0) {</span>
+<span class="fc" id="L13">			return 255;</span>
+		}
+
+<span class="fc" id="L16">		int r = colour / 100 % 10;</span>
+<span class="fc" id="L17">		int g = colour / 10 % 10;</span>
+<span class="fc" id="L18">		int b = colour % 10;</span>
+
+<span class="fc" id="L20">		return r * 36 + g * 6 + b;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

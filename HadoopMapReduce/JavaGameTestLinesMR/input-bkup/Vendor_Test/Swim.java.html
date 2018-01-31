@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Swim.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JavaGame</a> &gt; <a href="index.source.html" class="el_package">com.redomar.game.entities.efx</a> &gt; <span class="el_source">Swim.java</span></div><h1>Swim.java</h1><pre class="source lang-java linenums">package com.redomar.game.entities.efx;
+
+import com.redomar.game.level.LevelHandler;
+
+public class Swim {
+
+	private static LevelHandler level;
+	private int x;
+	private int y;
+<span class="fc" id="L10">	private int[] swimCols = new int[3];</span>
+
+<span class="fc" id="L12">	public Swim(LevelHandler level, int x, int y) {</span>
+<span class="fc" id="L13">		Swim.level = level;</span>
+<span class="fc" id="L14">		this.x = x;</span>
+<span class="fc" id="L15">		this.y = y;</span>
+<span class="fc" id="L16">	}</span>
+
+	public int[] waveCols(boolean isSwimming, boolean isMagma, boolean isMuddy){
+
+<span class="nc bnc" id="L20" title="All 2 branches missed.">		if(isSwimming){</span>
+<span class="nc" id="L21">			swimCols[0] = 255;</span>
+<span class="nc" id="L22">			swimCols[1] = 255;</span>
+<span class="nc" id="L23">			swimCols[2] = 115;</span>
+		}
+<span class="nc bnc" id="L25" title="All 2 branches missed.">		if (isMagma) {</span>
+<span class="nc" id="L26">			swimCols[0] = 541;</span>
+<span class="nc" id="L27">			swimCols[1] = 521;</span>
+<span class="nc" id="L28">			swimCols[2] = 510;</span>
+		}
+<span class="nc bnc" id="L30" title="All 2 branches missed.">		if (isMuddy) {</span>
+<span class="nc" id="L31">			swimCols[0] = 422;</span>
+<span class="nc" id="L32">			swimCols[1] = 410;</span>
+<span class="nc" id="L33">			swimCols[2] = 321;</span>
+		}
+<span class="nc" id="L35">		return swimCols;</span>
+	}
+
+	public boolean water(boolean isSwimming) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">		if (level.getTile(x &gt;&gt; 3, y &gt;&gt; 3).getId() == 4) {</span>
+<span class="nc" id="L40">			isSwimming = true;</span>
+		}
+
+<span class="nc bnc" id="L43" title="All 4 branches missed.">		if (isSwimming &amp;&amp; level.getTile(x &gt;&gt; 3, y &gt;&gt; 3).getId() != 4) {</span>
+<span class="nc" id="L44">			isSwimming = false;</span>
+		}
+<span class="nc" id="L46">		return isSwimming;</span>
+	}
+
+	public boolean magma(boolean isMagma) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">		if (level.getTile(x &gt;&gt; 3, y &gt;&gt; 3).getId() == 12) {</span>
+<span class="nc" id="L51">			isMagma = true;</span>
+		}
+
+<span class="nc bnc" id="L54" title="All 4 branches missed.">		if (isMagma &amp;&amp; level.getTile(x &gt;&gt; 3, y &gt;&gt; 3).getId() != 12) {</span>
+<span class="nc" id="L55">			isMagma = false;</span>
+		}
+
+<span class="nc" id="L58">		return isMagma;</span>
+	}
+
+	public boolean mud(boolean isMuddy) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">		if (level.getTile(x &gt;&gt; 3, y &gt;&gt; 3).getId() == 14) {</span>
+<span class="nc" id="L63">			isMuddy = true;</span>
+		}
+
+<span class="nc bnc" id="L66" title="All 4 branches missed.">		if (isMuddy &amp;&amp; level.getTile(x &gt;&gt; 3, y &gt;&gt; 3).getId() != 14) {</span>
+<span class="nc" id="L67">			isMuddy = false;</span>
+		}
+
+<span class="nc" id="L70">		return isMuddy;</span>
+	}
+
+	public boolean[] swimming(boolean isSwimming, boolean isMagma, boolean isMuddy) {
+		boolean[] swimminhType;
+<span class="nc" id="L75">		swimminhType = new boolean[3];</span>
+<span class="nc" id="L76">		swimminhType[0] = water(isSwimming);</span>
+<span class="nc" id="L77">		swimminhType[1] = magma(isMagma);</span>
+<span class="nc" id="L78">		swimminhType[2] = mud(isMuddy);</span>
+<span class="nc" id="L79">		return swimminhType;</span>
+	}
+
+	public boolean isActive(boolean[] swimmingType){
+<span class="nc bnc" id="L83" title="All 2 branches missed.">		if(swimmingType[0] == true){</span>
+<span class="nc" id="L84">			return true;</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">		}else if(swimmingType[1] == true){</span>
+<span class="nc" id="L86">			return true;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">		} else return swimmingType[2] == true;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

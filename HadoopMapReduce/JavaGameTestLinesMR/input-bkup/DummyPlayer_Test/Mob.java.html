@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Mob.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JavaGame</a> &gt; <a href="index.source.html" class="el_package">com.redomar.game.entities</a> &gt; <span class="el_source">Mob.java</span></div><h1>Mob.java</h1><pre class="source lang-java linenums">package com.redomar.game.entities;
+
+import com.redomar.game.entities.projectiles.Medium;
+import com.redomar.game.entities.projectiles.Projectile;
+import com.redomar.game.entities.projectiles.Small;
+import com.redomar.game.level.LevelHandler;
+import com.redomar.game.level.Node;
+import com.redomar.game.level.tiles.Tile;
+import com.redomar.game.lib.utils.Vector2i;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public abstract class Mob extends Entity {
+
+<span class="fc" id="L17">	protected Random random = new Random();</span>
+	protected double speed;
+<span class="fc" id="L19">	protected int numSteps = 0;</span>
+	protected boolean isMoving;
+<span class="fc" id="L21">	protected int movingDir = 1;</span>
+<span class="fc" id="L22">	protected int scale = 1;</span>
+<span class="fc" id="L23">	protected boolean isSwimming = false;</span>
+<span class="fc" id="L24">	protected boolean isMagma = false;</span>
+<span class="fc" id="L25">	protected boolean isMuddy = false;</span>
+<span class="fc" id="L26">	protected boolean changeLevels = false;</span>
+	protected int ticker;
+	/**
+	 * [0] Contains the &lt;strong&gt;xMin&lt;/strong&gt;&lt;br&gt;
+	 * [1] Contains the &lt;strong&gt;xMax&lt;/strong&gt;&lt;br&gt;
+	 * [2] Contains the &lt;strong&gt;yMin&lt;/strong&gt;&lt;br&gt;
+	 * [3] Contains the &lt;strong&gt;yMax&lt;/strong&gt;
+	 */
+<span class="fc" id="L34">	protected int[] collisionBoders = new int[4];</span>
+
+<span class="fc" id="L36">	protected List&lt;Projectile&gt; projectiles = new ArrayList&lt;Projectile&gt;();</span>
+
+	public Mob(LevelHandler level, String name, int x, int y, double speed, int[] collisionBoders) {
+<span class="fc" id="L39">		super(level);</span>
+<span class="fc" id="L40">		this.name = name;</span>
+<span class="fc" id="L41">		this.setX(x);</span>
+<span class="fc" id="L42">		this.setY(y);</span>
+<span class="fc" id="L43">		this.speed = speed;</span>
+<span class="fc" id="L44">		this.collisionBoders = collisionBoders;</span>
+<span class="fc" id="L45">	}</span>
+
+	public void move(double xa, double ya) {
+<span class="nc bnc" id="L48" title="All 4 branches missed.">		if (xa != 0 &amp;&amp; ya != 0) {</span>
+<span class="nc" id="L49">			move(xa, 0);</span>
+<span class="nc" id="L50">			move(0, ya);</span>
+<span class="nc" id="L51">			numSteps--;</span>
+<span class="nc" id="L52">			return;</span>
+		}
+<span class="nc" id="L54">		numSteps++;</span>
+
+		//Moving Directions
+		//0 = Facing UP
+		//1 = Facing Down
+		//2 = Facing Left
+		//3 = Facing Right
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">		if (ya &lt; 0) {</span>
+<span class="nc" id="L63">			movingDir = 0;</span>
+		}
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (ya &gt; 0) {</span>
+<span class="nc" id="L66">			movingDir = 1;</span>
+		}
+<span class="nc bnc" id="L68" title="All 2 branches missed.">		if (xa &lt; 0) {</span>
+<span class="nc" id="L69">			movingDir = 2;</span>
+		}
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		if (xa &gt; 0) {</span>
+<span class="nc" id="L72">			movingDir = 3;</span>
+		}
+
+<span class="nc bnc" id="L75" title="All 2 branches missed.">		while (xa != 0){</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">			if (Math.abs(xa) &gt; 1){</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">				if (!hasCollided(abs(xa), ya)) {</span>
+<span class="nc" id="L78">					this.x += abs(xa);</span>
+				}
+<span class="nc" id="L80">				xa -= abs(xa);</span>
+			} else {
+<span class="nc bnc" id="L82" title="All 2 branches missed.">				if (!hasCollided(abs(xa), ya)) {</span>
+<span class="nc" id="L83">					this.x += xa;</span>
+				}
+<span class="nc" id="L85">				xa = 0;</span>
+			}
+		}
+
+<span class="nc bnc" id="L89" title="All 2 branches missed.">		while (ya != 0){</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">			if (Math.abs(ya) &gt; 1){</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">				if (!hasCollided(xa, abs(ya))) {</span>
+<span class="nc" id="L92">					this.y += abs(ya);</span>
+				}
+<span class="nc" id="L94">				ya -= abs(ya);</span>
+			} else {
+<span class="nc bnc" id="L96" title="All 2 branches missed.">				if (!hasCollided(xa, abs(ya))) {</span>
+<span class="nc" id="L97">					this.y += ya;</span>
+				}
+<span class="nc" id="L99">				ya = 0;</span>
+			}
+		}
+
+<span class="nc" id="L103">	}</span>
+
+	public boolean hasCollided(double xa, double ya){
+<span class="nc" id="L106">		int xMin = collisionBoders[0];</span>
+<span class="nc" id="L107">		int xMax = collisionBoders[1];</span>
+<span class="nc" id="L108">		int yMin = collisionBoders[2];</span>
+<span class="nc" id="L109">		int yMax = collisionBoders[3];</span>
+
+<span class="nc bnc" id="L111" title="All 2 branches missed.">		for (int x = xMin; x &lt; xMax; x++) {</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">			if (isSolid((int) xa, (int) ya, x, yMin)) {</span>
+<span class="nc" id="L113">				return true;</span>
+			}
+		}
+
+<span class="nc bnc" id="L117" title="All 2 branches missed.">		for (int x = xMin; x &lt; xMax; x++) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">			if (isSolid((int) xa, (int) ya, x, yMax)) {</span>
+<span class="nc" id="L119">				return true;</span>
+			}
+		}
+
+<span class="nc bnc" id="L123" title="All 2 branches missed.">		for (int y = yMin; y &lt; yMax; y++) {</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">			if (isSolid((int) xa, (int) ya, xMin, y)) {</span>
+<span class="nc" id="L125">				return true;</span>
+			}
+		}
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">		for (int y = yMin; y &lt; yMax; y++) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">			if (isSolid((int) xa, (int) ya, xMax, y)) {</span>
+<span class="nc" id="L131">				return true;</span>
+			}
+		}
+
+<span class="nc" id="L135">		return false;</span>
+	}
+
+	public boolean hasCollidedAlt(int xa, int ya){
+<span class="nc" id="L139">		boolean solid = false;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">		for (int c = 0; c &lt; 4; c++) {</span>
+<span class="nc" id="L141">			double xt = ((x + xa) - c % 2 * 8) / 8;</span>
+<span class="nc" id="L142">			double yt = ((y + ya) - c / 2 * 8) / 8;</span>
+<span class="nc" id="L143">			int ix = (int) Math.ceil(xt);</span>
+<span class="nc" id="L144">			int iy = (int) Math.ceil(yt);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">			if (c % 2 == 0) ix = (int) Math.floor(xt);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">			if (c / 2 == 0) iy = (int) Math.floor(yt);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">			if(level.getTile(ix, iy).isSolid()) solid = true;</span>
+		}
+<span class="nc" id="L149">		return solid;</span>
+	}
+
+	private int abs(double i){
+<span class="nc bnc" id="L153" title="All 2 branches missed.">		if (i &lt; 0) return -1;</span>
+<span class="nc" id="L154">		return 1;</span>
+	}
+
+	protected boolean isSolid(int xa, int ya, int x, int y) {
+
+<span class="nc bnc" id="L159" title="All 2 branches missed.">		if (level == null) {</span>
+<span class="nc" id="L160">			return false;</span>
+		}
+
+<span class="nc" id="L163">		Tile lastTile = level.getTile(((int) this.getX() + x) &gt;&gt; 3,</span>
+<span class="nc" id="L164">				((int) this.getY() + y) &gt;&gt; 3);</span>
+<span class="nc" id="L165">		Tile newtTile = level.getTile(((int) this.getX() + x + xa) &gt;&gt; 3, ((int) this.getY()</span>
+				+ y + ya) &gt;&gt; 3);
+
+<span class="nc bnc" id="L168" title="All 4 branches missed.">		return !lastTile.equals(newtTile) &amp;&amp; newtTile.isSolid();</span>
+
+	}
+
+	protected void aStarMovementAI(int x, int y, int px, int py, double xa,
+								   double ya, double speed, Mob mob, List&lt;Node&gt; path, int time) {
+<span class="nc" id="L174">		xa = 0;</span>
+<span class="nc" id="L175">		ya = 0;</span>
+<span class="nc" id="L176">		Vector2i start = new Vector2i(x &gt;&gt; 3, y &gt;&gt; 3);</span>
+<span class="nc" id="L177">		Vector2i goal = new Vector2i(px &gt;&gt; 3, py &gt;&gt; 3);</span>
+<span class="nc" id="L178">		path = level.findPath(start, goal);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">		if(path != null) {</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">			if(path.size() &gt; 0){</span>
+<span class="nc" id="L181">				Vector2i vector = path.get(path.size() - 1).tile;</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">				if(x &lt; vector.getX() &lt;&lt; 3) xa =+ speed;</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">				if(x &gt; vector.getX() &lt;&lt; 3) xa =- speed;</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">				if(y &lt; vector.getY() &lt;&lt; 3) ya =+ speed;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">				if(y &gt; vector.getY() &lt;&lt; 3) ya =- speed;</span>
+<span class="nc" id="L186">				moveMob(xa, ya, mob);</span>
+			}
+		}
+<span class="nc" id="L189">	}</span>
+
+	protected void followMovementAI(int x, int y, int px, int py, double xa,
+									double ya, double speed, Mob mob) {
+<span class="nc" id="L193">		ya = 0;</span>
+<span class="nc" id="L194">		xa = 0;</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">		if (px &gt; x)</span>
+<span class="nc" id="L196">			xa+=speed;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">		if (px &lt; x)</span>
+<span class="nc" id="L198">			xa-=speed;</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">		if (py &gt; y)</span>
+<span class="nc" id="L200">			ya+=speed;</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">		if (py &lt; y)</span>
+<span class="nc" id="L202">			ya-=speed;</span>
+<span class="nc" id="L203">		moveMob(xa, ya, mob);</span>
+<span class="nc" id="L204">	}</span>
+
+	protected double[] randomMovementAI(double x, double y, double xa, double ya, int tick) {
+<span class="nc bnc" id="L207" title="All 2 branches missed.">		if (tick % (random.nextInt(50) + 30) == 0) {</span>
+<span class="nc" id="L208">			xa = random.nextInt(3) - 1;</span>
+<span class="nc" id="L209">			ya = random.nextInt(3) - 1;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">			if (random.nextInt(4) == 0) {</span>
+<span class="nc" id="L211">				xa = 0;</span>
+<span class="nc" id="L212">				ya = 0;</span>
+			}
+		}
+<span class="nc bnc" id="L215" title="All 2 branches missed.">		if(x &lt;= 180){</span>
+<span class="nc" id="L216">			xa = 1;</span>
+<span class="nc" id="L217">			ya = -1;</span>
+		}
+<span class="nc" id="L219">		double move[] = new double[2];</span>
+<span class="nc" id="L220">		move[0] = xa;</span>
+<span class="nc" id="L221">		move[1] = ya;</span>
+<span class="nc" id="L222">		return move;</span>
+	}
+
+	protected void moveMob(double xa, double ya, Mob mob) {
+<span class="nc bnc" id="L226" title="All 4 branches missed.">		if (xa != 0 || ya != 0) {</span>
+<span class="nc" id="L227">			mob.move(xa, ya);</span>
+<span class="nc" id="L228">			mob.isMoving = true;</span>
+		} else {
+<span class="nc" id="L230">			mob.isMoving = false;</span>
+		}
+<span class="nc" id="L232">	}</span>
+
+	protected void shoot(double x, double y, double dir, double buttonId, boolean secondry){
+//		dir = dir * (180 /Math.PI); 
+//		Printing print = new Printing();
+//		print.print(&quot;Angle: &quot;+ dir, PrintTypes.GAME);
+<span class="nc bnc" id="L238" title="All 2 branches missed.">		if(buttonId == 1){</span>
+<span class="nc" id="L239">			Projectile p = new Small(level, (int) x,(int) y, dir);</span>
+<span class="nc" id="L240">			projectiles.add(p);</span>
+<span class="nc" id="L241">			level.addProjectileEntities(p);</span>
+<span class="nc bnc" id="L242" title="All 4 branches missed.">		} else if(buttonId == 3 &amp;&amp; secondry == true){</span>
+<span class="nc" id="L243">			Projectile p = new Medium(level, (int) x,(int) y, dir);</span>
+<span class="nc" id="L244">			projectiles.add(p);</span>
+<span class="nc" id="L245">			level.addProjectileEntities(p);</span>
+		}
+<span class="nc" id="L247">	}</span>
+
+	public String getName() {
+<span class="nc" id="L250">		return name;</span>
+	}
+
+	public int getNumSteps() {
+<span class="nc" id="L254">		return numSteps;</span>
+	}
+
+	public void setNumSteps(int numSteps) {
+<span class="nc" id="L258">		this.numSteps = numSteps;</span>
+<span class="nc" id="L259">	}</span>
+
+	public boolean isMoving() {
+<span class="nc" id="L262">		return this.isMoving;</span>
+	}
+
+	public void setMoving(boolean isMoving) {
+<span class="nc" id="L266">		this.isMoving = isMoving;</span>
+<span class="nc" id="L267">	}</span>
+
+	public void setMovingDir(int movingDir) {
+<span class="nc" id="L270">		this.movingDir = movingDir;</span>
+<span class="nc" id="L271">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

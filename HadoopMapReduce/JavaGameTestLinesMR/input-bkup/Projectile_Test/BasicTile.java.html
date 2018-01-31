@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BasicTile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JavaGame</a> &gt; <a href="index.source.html" class="el_package">com.redomar.game.level.tiles</a> &gt; <span class="el_source">BasicTile.java</span></div><h1>BasicTile.java</h1><pre class="source lang-java linenums">package com.redomar.game.level.tiles;
+
+import com.redomar.game.gfx.Screen;
+import com.redomar.game.level.LevelHandler;
+
+public class BasicTile extends Tile {
+
+	protected int tileId;
+	protected int tileColour;
+
+	/**
+	 * This is a tile that does not emit light, nor is sold. This tile does not have any animations.
+	 *
+	 * @param id Unique ID for the Tile
+	 * @param x Specifies the x-coordinate from the SpriteSheet, measured in 8 pixels. Must be 0 - 31
+	 * @param y Specifies the y-coordinate from the SpriteSheet, measured in 8 pixels. Must be 0 - 31
+	 * @param tileColour Colours from the SpriteSheet.
+	 * @param levelColour Colours to be displayed in the Game World.
+	 */
+	public BasicTile(int id, int x, int y, int tileColour, int levelColour) {
+<span class="fc" id="L21">		super(id, false, false, levelColour);</span>
+
+<span class="fc" id="L23">		this.tileId = x + y * 32;</span>
+<span class="fc" id="L24">		this.tileColour = tileColour;</span>
+<span class="fc" id="L25">	}</span>
+
+	public void tick() {
+<span class="nc" id="L28">	}</span>
+
+	public void render(Screen screen, LevelHandler level, int x, int y) {
+<span class="nc" id="L31">		screen.render(x, y, tileId, tileColour, 0x00, 1);</span>
+<span class="nc" id="L32">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

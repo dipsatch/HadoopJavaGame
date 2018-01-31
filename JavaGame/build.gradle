@@ -1,0 +1,97 @@
+repositories{
+    mavenCentral()
+}
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'jacoco'
+
+mainClassName = 'com.redomar.game.Launcher'
+
+sourceSets{
+    main{
+        java.srcDir 'src/main'
+        resources.srcDir 'res'
+    }
+    test{
+        java.srcDir 'src/test'
+        resources.srcDir 'src/test/res'
+    }
+}
+
+dependencies{
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile('com.googlecode.soundlibs:mp3spi:1.9.5.4'){
+        exclude module: 'junit'
+    }
+
+//    jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.7.9', classifier: 'nodeps'
+//    jacocoRuntime group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.7.9', classifier: 'runtime'
+
+    testCompile 'junit:junit:4.12'
+}
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        if(project.hasProperty('arg')){
+            html.destination file("${buildDir}/reports/jacoco/" + arg)
+        }
+//        html.destination file("${buildDir}/reports/jacoco/" + arg)
+    }
+}
+
+//test{
+//    filter {
+//        includeTestsMatching "VendorTest"
+//    }
+//}
+
+//configurations {
+//    jacoco
+//    jacocoRuntime
+//}
+
+//task instrument(dependsOn: ['classes']) {
+//    ext.outputDir = buildDir.path + '/classes-instrumented'
+//    doLast {
+//        ant.taskdef(name: 'instrument',
+//                classname: 'org.jacoco.ant.InstrumentTask',
+//                classpath: configurations.jacoco.asPath)
+//        ant.instrument(destdir: outputDir) {
+//            fileset(dir: sourceSets.main.output.classesDir)
+//        }
+//    }
+//}
+//
+//gradle.taskGraph.whenReady { graph ->
+//    if (graph.hasTask(instrument)) {
+//        tasks.withType(Test) {
+//            doFirst {
+//                systemProperty 'jacoco-agent.destfile', buildDir.path + '/jacoco/tests.exec'
+//                classpath = files(instrument.outputDir) + classpath + configurations.jacocoRuntime
+//            }
+//        }
+//    }
+//}
+//
+//task report(dependsOn: ['instrument', 'test']) {
+//    doLast {
+//        ant.taskdef(name: 'report',
+//                classname: 'org.jacoco.ant.ReportTask',
+//                classpath: configurations.jacoco.asPath)
+//        ant.report() {
+//            executiondata {
+//                ant.file(file: buildDir.path + '/jacoco/tests.exec')
+//            }
+//            structure(name: 'Example') {
+//                classfiles {
+//                    fileset(dir: sourceSets.main.output.classesDir)
+//                }
+//                sourcefiles {
+//                    fileset(dir: 'src/main')
+//                }
+//            }
+//            html(destdir: buildDir.path + '/reports/jacoco')
+//        }
+//    }
+//}

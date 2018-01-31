@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Printing.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JavaGame</a> &gt; <a href="index.source.html" class="el_package">com.redomar.game.script</a> &gt; <span class="el_source">Printing.java</span></div><h1>Printing.java</h1><pre class="source lang-java linenums">package com.redomar.game.script;
+
+import com.redomar.game.lib.Time;
+
+import java.io.File;
+import java.util.Arrays;
+
+public class Printing {
+
+<span class="fc" id="L10">	private static int lineNumber = 0;</span>
+	private PrintTypes type;
+<span class="fc" id="L12">	private Time time = new Time();</span>
+	private String message;
+	private String msgTime;
+	private String msgType;
+<span class="fc" id="L16">	private boolean errorMode = false;</span>
+	private PrintToLog logFile;
+
+<span class="fc" id="L19">	public Printing() {</span>
+
+<span class="fc" id="L21">	}</span>
+
+	public void print(String message, PrintTypes type) {
+<span class="nc" id="L24">		this.type = type;</span>
+<span class="nc" id="L25">		setMessage(message);</span>
+<span class="nc" id="L26">		readMessageType(type);</span>
+<span class="nc" id="L27">		printOut();</span>
+<span class="nc" id="L28">	}</span>
+
+	private void printOut(){
+<span class="nc" id="L31">		msgTime = &quot;[&quot; + time.getTime() + &quot;]&quot;;</span>
+<span class="nc" id="L32">		msgType = &quot;[&quot; + type.toString() + &quot;]&quot;;</span>
+
+<span class="nc" id="L34">		logFile = printToLogType(type);</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">		if (lineNumber == 0) {</span>
+
+<span class="nc" id="L37">			String dashes = &quot;&quot;;</span>
+<span class="nc" id="L38">			String title = (&quot;[&quot; + time.getTimeDate() + &quot;]&quot;);</span>
+<span class="nc" id="L39">			char dash = '-';</span>
+<span class="nc" id="L40">			int number = title.length() / 3;</span>
+
+<span class="nc" id="L42">			char[] repeat = new char[number];</span>
+<span class="nc" id="L43">			Arrays.fill(repeat, dash);</span>
+<span class="nc" id="L44">			dashes += new String(repeat);</span>
+
+<span class="nc" id="L46">			logFile.log(dashes + title + dashes + &quot;\n&quot; + msgTime + msgType + this.getMessage());</span>
+<span class="nc" id="L47">			lineNumber++;</span>
+<span class="nc" id="L48">		} else {</span>
+<span class="nc" id="L49">			logFile.log(msgTime + msgType + this.getMessage());</span>
+		}
+
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">		if(errorMode) {</span>
+<span class="nc" id="L54">			System.err.println(msgType + msgTime + message);</span>
+		}else{
+<span class="nc" id="L56">			System.out.println(msgType + msgTime + message);</span>
+		}
+<span class="nc" id="L58">	}</span>
+
+	private PrintToLog printToLogType(PrintTypes type){
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		if (type == PrintTypes.TEST){</span>
+<span class="nc" id="L62">			return new PrintToLog(&quot;.PrintType-TEST.txt&quot;);</span>
+		} else {
+<span class="nc" id="L64">			return new PrintToLog(&quot;.log.txt&quot;);</span>
+		}
+	}
+
+	public void removeLog(){
+<span class="nc" id="L69">		new File(&quot;.log.txt&quot;).delete();</span>
+<span class="nc" id="L70">	}</span>
+
+	public String getMessage() {
+<span class="nc" id="L73">		return message;</span>
+	}
+
+	public void setMessage(String message) {
+<span class="nc" id="L77">		this.message = message;</span>
+<span class="nc" id="L78">	}</span>
+
+	private void readMessageType(PrintTypes type){
+<span class="nc bnc" id="L81" title="All 2 branches missed.">		this.errorMode = type == PrintTypes.ERROR;</span>
+<span class="nc" id="L82">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

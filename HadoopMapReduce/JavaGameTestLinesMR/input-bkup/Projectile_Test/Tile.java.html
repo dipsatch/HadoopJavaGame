@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JavaGame</a> &gt; <a href="index.source.html" class="el_package">com.redomar.game.level.tiles</a> &gt; <span class="el_source">Tile.java</span></div><h1>Tile.java</h1><pre class="source lang-java linenums">package com.redomar.game.level.tiles;
+
+import com.redomar.game.gfx.Colours;
+import com.redomar.game.gfx.Screen;
+import com.redomar.game.level.LevelHandler;
+
+public abstract class Tile {
+
+<span class="fc" id="L9">	private static final Tile[] tiles = new Tile[256];</span>
+<span class="fc" id="L10">	private static final Tile VOID = new BasicSolidTile(0, 0, 0, Colours.get(0,	-1, -1, -1), 0xFF000000);</span>
+<span class="fc" id="L11">	private static final Tile STONE = new BasicSolidTile(1, 1, 0, Colours.get(-1, 444, 333, -1), 0xFF555555);</span>
+<span class="fc" id="L12">	private static final Tile CHISELED_stone = new BasicTile(2, 2, 0, Colours.get(-1, 333, 222, -1), 0xFF666666);</span>
+<span class="fc" id="L13">	private static final Tile GRASS = new BasicTile(3, 3, 0, Colours.get(-1, 131, 141, -1), 0xFF00FF00);</span>
+<span class="fc" id="L14">	private static final Tile WATER = new AnimatedTile(4, new int[][] {	{ 0, 5 }, { 1, 5 }, { 2, 5 }, { 1, 5 } }, Colours.get(-1, 004, 115,	-1), 0xFF0000FF, 1000);</span>
+<span class="fc" id="L15">	private static final Tile FLOWER_rose = new BasicTile(5, 4, 0, Colours.get(131, 151, 510, 553), 0xFFCCFF33);</span>
+<span class="fc" id="L16">	private static final Tile FLOWER_dandelion = new BasicTile(6, 4, 0,	Colours.get(131, 151, 553, 510), 0xFFFFCC33);</span>
+<span class="fc" id="L17">	private static final Tile SAND = new BasicTile(7, 5, 0, Colours.get(-1, 553, 554, 555), 0xFFFFFF99);</span>
+<span class="fc" id="L18">	private static final Tile CHEST_a = new BasicSolidTile(8, 0, 1, Colours.get(333, 111, 420, 000), 0xFFFF0001);</span>
+<span class="fc" id="L19">	private static final Tile CHEST_b = new BasicSolidTile(9, 1, 1, Colours.get(333, 111, 420, 000), 0xFFFF0002);</span>
+<span class="fc" id="L20">	private static final Tile CARPET_red = new BasicTile(10, 5, 0, Colours.get(-1, 311, 411, 311), 0xFFAA3636);</span>
+<span class="fc" id="L21">	private static final Tile PORTAL = new AnimatedTile(11, new int[][] { { 3,  5 },  { 4, 5 }, { 5, 5 }, { 6, 5 }, { 7, 5 }, { 8, 5 }, { 9, 5 }, { 10, 5 } },  Colours.get(-1, 005, 305, -1), 0xFF00EAFF, 100);</span>
+<span class="fc" id="L22">	private static final Tile MAGMA = new AnimatedTile(12, new int [][] { { 0, 5 }, { 1, 5 }, { 2, 5 }, { 1, 5 } }, Colours.get(-1, 400, 511, -1), 0xFFF00F0F, 1000);</span>
+<span class="fc" id="L23">	private static final Tile DIRT = new BasicTile(13, 3, 0, Colours.get(0, 210, 321, -1), 0xFF442200);</span>
+<span class="fc" id="L24">	private static final Tile DIRT_WET = new AnimatedTile(14, new int[][] { { 1, 5 }, { 2, 5 } }, Colours.get(-1, 211, 322, -1), 0xFF663300, 1500);</span>
+
+	protected byte id;
+	protected boolean solid;
+	protected boolean emitter;
+	private int levelColour;
+
+<span class="fc" id="L31">	public Tile(int id, boolean isSolid, boolean isEmitter, int colour) {</span>
+<span class="fc" id="L32">		this.id = (byte) id;</span>
+
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">		if (getTiles()[id] != null) {</span>
+<span class="nc" id="L35">			throw new RuntimeException(&quot;Duplicate tile id on:&quot; + id);</span>
+		}
+
+<span class="fc" id="L38">		this.solid = isSolid;</span>
+<span class="fc" id="L39">		this.emitter = isEmitter;</span>
+<span class="fc" id="L40">		this.levelColour = colour;</span>
+
+<span class="fc" id="L42">		getTiles()[id] = this;</span>
+<span class="fc" id="L43">	}</span>
+
+	public byte getId() {
+<span class="nc" id="L46">		return id;</span>
+	}
+
+	public boolean isSolid() {
+<span class="nc" id="L50">		return solid;</span>
+	}
+
+	public boolean isEmitter() {
+<span class="nc" id="L54">		return emitter;</span>
+	}
+
+	public abstract void tick();
+
+	public abstract void render(Screen screen, LevelHandler level, int x, int y);
+
+	public int getLevelColour() {
+<span class="nc" id="L62">		return levelColour;</span>
+	}
+
+	public static Tile getStone() {
+<span class="nc" id="L66">		return STONE;</span>
+	}
+
+	public static Tile getChiseledStone() {
+<span class="nc" id="L70">		return CHISELED_stone;</span>
+	}
+
+	public static Tile getGrass() {
+<span class="nc" id="L74">		return GRASS;</span>
+	}
+
+	public static Tile getFlowerRose() {
+<span class="nc" id="L78">		return FLOWER_rose;</span>
+	}
+
+	public static Tile getFlowerDandelion() {
+<span class="nc" id="L82">		return FLOWER_dandelion;</span>
+	}
+
+	public static Tile getSand() {
+<span class="nc" id="L86">		return SAND;</span>
+	}
+
+	public static Tile getWater() {
+<span class="nc" id="L90">		return WATER;</span>
+	}
+
+	public static Tile getVoid() {
+<span class="fc" id="L94">		return VOID;</span>
+	}
+
+	public static Tile[] getTiles() {
+<span class="fc" id="L98">		return tiles;</span>
+	}
+
+	public static Tile getChestA() {
+<span class="nc" id="L102">		return CHEST_a;</span>
+	}
+
+	public static Tile getChestB() {
+<span class="nc" id="L106">		return CHEST_b;</span>
+	}
+
+	public static Tile getCarpetRed() {
+<span class="nc" id="L110">		return CARPET_red;</span>
+	}
+
+	public static Tile getPortal() {
+<span class="nc" id="L114">		return PORTAL;</span>
+	}
+
+	public static Tile getMagma() {
+<span class="nc" id="L118">		return MAGMA;</span>
+	}
+
+	public static Tile getDirt() {
+<span class="nc" id="L122">		return DIRT;</span>
+	}
+
+	public static Tile getDirtWet() {
+<span class="nc" id="L126">		return DIRT_WET;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
