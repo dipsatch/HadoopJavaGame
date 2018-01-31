@@ -1,10 +1,7 @@
-Graduate(G), UID - 652811050, dghosh6@uic.edu, Dipankar Ghosh
-=============================================================
+HadoopJavaGame
+==============
 
-JavaGame
-========
-
-A 2D game built on Java, inspired and taken from [this](https://github.com/redomar/JavaGame) GitHub repository. I have added few additional features such as JUnit tests, and build scripts.
+Hadoop solutions to a 2D game built on Java, which was initially inspired and taken from [this](https://github.com/redomar/JavaGame) GitHub repository. I have added few additional features such as JUnit tests, and build scripts.
 
 
 Pre-requisites
